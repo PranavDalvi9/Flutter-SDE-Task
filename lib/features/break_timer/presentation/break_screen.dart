@@ -16,6 +16,7 @@ class BreakScreen extends StatefulWidget {
 
 class _Sample2State extends State<BreakScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isLoading = true;
 
   Duration remaining = Duration.zero;
   Duration breakDuration = Duration.zero;
@@ -85,6 +86,7 @@ class _Sample2State extends State<BreakScreen> {
       breakEnded = true;
     }
 
+    isLoading = false;
     setState(() {});
   }
 
@@ -250,6 +252,12 @@ class _Sample2State extends State<BreakScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator(color: Colors.white)),
+      );
+    }
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -473,7 +481,7 @@ class _Sample2State extends State<BreakScreen> {
                               ),
                             ),
                             child: Text(
-                              "Break ends at ${DateFormat('hh:mm a').format(breakEndTime!)}",
+                              "Break ends at ${DateFormat('hh:mm a').format(breakEndTime ?? DateTime.now())}",
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
