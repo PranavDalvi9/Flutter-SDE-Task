@@ -15,7 +15,7 @@ A Flutter application built as part of the **Flutter SDE Task**. The app include
 - [Bonus](#-bonus)
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
-- [App Link](#-app-link)
+- [App Link](https://drive.google.com/file/d/1WpVynfnHgCu_K84hg5kq7reu6YnIF0qh/view?usp=sharing)
 - [License](#-license)
 
 ---
@@ -105,5 +105,5 @@ A Flutter application built as part of the **Flutter SDE Task**. The app include
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/flutter-sde-task-app.git
+git clone [https://github.com/your-username/flutter-sde-task-app.git](https://github.com/PranavDalvi9/Flutter-SDE-Task.git)
 cd flutter-sde-task-app
