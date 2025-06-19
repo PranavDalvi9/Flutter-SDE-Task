@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:task_app/core/services/local_storage.dart';
 import 'package:task_app/features/auth/presentation/login_screen.dart';
@@ -429,19 +430,34 @@ class _Sample2State extends State<BreakScreen> {
 
                           CircularPercentIndicator(
                             radius: 140,
-                            lineWidth: 16,
-                            startAngle: 209,
-                            percent: 0.84,
-                            backgroundColor: Colors.transparent,
+                            lineWidth: 20,
+                            percent: (1 -
+                                    remaining.inSeconds /
+                                        breakDuration.inSeconds)
+                                .clamp(0.0, 1.0),
+                            startAngle:
+                                210, // Start angle to place the gap at bottom
+                            arcType:
+                                ArcType
+                                    .FULL, // Only draw an arc, not full circle
+                            arcBackgroundColor: Colors.white.withOpacity(
+                              0.15,
+                            ), // semi-transparent bg stroke
                             progressColor: Colors.white,
-                            circularStrokeCap: CircularStrokeCap.square,
-                            center: Text(
-                              _formatDuration(remaining!),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.w800,
-                              ),
+                            backgroundColor: Colors.transparent, // no full bg
+                            circularStrokeCap: CircularStrokeCap.round,
+                            center: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  _formatDuration(remaining),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 38),
@@ -457,7 +473,7 @@ class _Sample2State extends State<BreakScreen> {
                               ),
                             ),
                             child: Text(
-                              "Break ends at ${breakEndTime?.hour.toString().padLeft(2, '0')}:${breakEndTime?.minute.toString().padLeft(2, '0')}",
+                              "Break ends at ${DateFormat('hh:mm a').format(breakEndTime!)}",
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.white,
