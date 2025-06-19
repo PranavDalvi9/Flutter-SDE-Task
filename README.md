@@ -105,5 +105,5 @@ A Flutter application built as part of the **Flutter SDE Task**. The app include
 ### 1. Clone the repository
 
 ```bash
-git clone [https://github.com/your-username/flutter-sde-task-app.git](https://github.com/PranavDalvi9/Flutter-SDE-Task.git)
+git clone https://github.com/PranavDalvi9/Flutter-SDE-Task.git
 cd flutter-sde-task-app
