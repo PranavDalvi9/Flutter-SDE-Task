@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:task_app/core/services/local_storage.dart';
+import 'package:task_app/core/widgets/app_text.dart';
 import 'package:task_app/features/auth/presentation/login_screen.dart';
 
 class BreakScreen extends StatefulWidget {
@@ -139,20 +140,29 @@ class _Sample2State extends State<BreakScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              const Text(
-                "Ending break early?",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Are you sure you want to end your break now? Take this time to recharge before your next task.",
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
-                ),
+
+              const AppText(
+                text: "Ending break early?",
                 textAlign: TextAlign.center,
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF101840),
+                lineHeight: 1.2,
+                letterSpacing: 0,
               ),
+
+              const SizedBox(height: 16),
+              const AppText(
+                text:
+                    "Are you sure you want to end your break now? Take this time to recharge before your next task.",
+                textAlign: TextAlign.center,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                lineHeight: 1.33,
+                letterSpacing: -0.24,
+                color: Color(0xFF525871),
+              ),
+
               const SizedBox(height: 31),
               Row(
                 children: [
@@ -167,14 +177,12 @@ class _Sample2State extends State<BreakScreen> {
                           color: Color(0xFF429777),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Text(
-                          'Continue',
+                        child: AppText(
+                          text: 'Continue',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -193,14 +201,12 @@ class _Sample2State extends State<BreakScreen> {
                           border: Border.all(color: Color(0xFFA73636)),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: Text(
-                          'End now',
+                        child: AppText(
+                          text: 'End now',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFFA73636),
-                          ),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFFA73636),
                         ),
                       ),
                     ),
@@ -254,8 +260,8 @@ class _Sample2State extends State<BreakScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(child: CircularProgressIndicator(color: Colors.white)),
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator(color: Colors.black)),
       );
     }
     return Scaffold(
@@ -317,8 +323,7 @@ class _Sample2State extends State<BreakScreen> {
                         children: [
                           InkWell(
                             onTap: () {
-                              _scaffoldKey.currentState
-                                  ?.openDrawer(); // 🔓 Opens the drawer
+                              _scaffoldKey.currentState?.openDrawer();
                             },
                             child: Image.asset(
                               'assets/images/menu_icon.png',
@@ -376,28 +381,31 @@ class _Sample2State extends State<BreakScreen> {
                         ],
                       ),
                     ),
+
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'Hi, Reshma!',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: AppText(
+                        text: 'Hi, Reshma!',
+                        textAlign: TextAlign.center,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        lineHeight: 18 / 13,
+                        letterSpacing: -0.24,
+                        color: Color(0xFFF5FBF8),
                       ),
                     ),
-                    SizedBox(height: 4),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
 
-                      child: Text(
-                        'You are on break!',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                    SizedBox(height: 4),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: const AppText(
+                        text: 'You are on break!',
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        lineHeight: 26 / 22,
+                        letterSpacing: -0.24,
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -425,15 +433,19 @@ class _Sample2State extends State<BreakScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(height: 32),
-                          const Text(
-                            'We value your hard work!\nTake this time to relax',
+
+                          const AppText(
+                            text:
+                                'We value your hard work!\nTake this time to relax',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
-                            ),
+
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            lineHeight: 22 / 17,
+                            letterSpacing: -0.24,
+                            color: Colors.white,
                           ),
+
                           const SizedBox(height: 24),
 
                           CircularPercentIndicator(
@@ -443,16 +455,11 @@ class _Sample2State extends State<BreakScreen> {
                                     remaining.inSeconds /
                                         breakDuration.inSeconds)
                                 .clamp(0.0, 1.0),
-                            startAngle:
-                                210, // Start angle to place the gap at bottom
-                            arcType:
-                                ArcType
-                                    .FULL, // Only draw an arc, not full circle
-                            arcBackgroundColor: Colors.white.withOpacity(
-                              0.15,
-                            ), // semi-transparent bg stroke
+                            startAngle: 210,
+                            arcType: ArcType.FULL,
+                            arcBackgroundColor: Colors.white.withOpacity(0.15),
                             progressColor: Colors.white,
-                            backgroundColor: Colors.transparent, // no full bg
+                            backgroundColor: Colors.transparent,
                             circularStrokeCap: CircularStrokeCap.round,
                             center: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -480,14 +487,13 @@ class _Sample2State extends State<BreakScreen> {
                                 bottom: BorderSide(color: Color(0xFFACC4E8CC)),
                               ),
                             ),
-                            child: Text(
-                              "Break ends at ${DateFormat('hh:mm a').format(breakEndTime ?? DateTime.now())}",
+                            child: AppText(
+                              text:
+                                  "Break ends at ${DateFormat('hh:mm a').format(breakEndTime ?? DateTime.now())}",
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -501,14 +507,12 @@ class _Sample2State extends State<BreakScreen> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               padding: EdgeInsets.symmetric(vertical: 14.5),
-                              child: const Text(
-                                'End my break',
+                              child: const AppText(
+                                text: 'End my break',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -533,18 +537,22 @@ class _Sample2State extends State<BreakScreen> {
                             height: 123,
                           ),
                           SizedBox(height: 24),
+
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 32),
-                            child: Text(
-                              "Hope you are feeling refreshed and ready to start working again",
+                            padding: const EdgeInsets.symmetric(horizontal: 32),
+                            child: const AppText(
+                              text:
+                                  "Hope you are feeling refreshed and ready to start working again",
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
+
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              lineHeight: 22 / 17,
+                              letterSpacing: -0.24,
+                              color: Colors.white,
                             ),
                           ),
+
                           SizedBox(height: 52),
                         ],
                       ),

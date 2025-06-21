@@ -30,6 +30,10 @@ class MyApp extends StatelessWidget {
       startScreen = const LoginScreen();
     }
 
-    return MaterialApp(debugShowCheckedModeBanner: false, home: startScreen);
+    return MaterialApp(
+      theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+      debugShowCheckedModeBanner: false,
+      home: startScreen,
+    );
   }
 }

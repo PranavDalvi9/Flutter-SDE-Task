@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:task_app/core/services/local_storage.dart';
+import 'package:task_app/core/widgets/app_text.dart';
 import 'package:task_app/features/break_timer/presentation/break_screen.dart';
+import 'package:task_app/features/questionnaire/presentation/widgets/rounded_progress_bar.dart';
 
 const String yes = "Yes";
 const String no = "No";
@@ -130,10 +132,6 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         .set(data);
     await LocalStorage.saveCurrentScreen('homescreen');
 
-    // ScaffoldMessenger.of(
-    //   context,
-    // ).showSnackBar(const SnackBar(content: Text("Responses submitted.")));
-
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const BreakScreen()),
@@ -173,68 +171,56 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     String? groupValue,
     Function(String?) onChanged,
   ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 24),
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-              color: headingTextColor,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children:
-                [yes, no].map((value) {
-                  final selected = groupValue == value;
-                  return GestureDetector(
-                    onTap: () => onChanged(value),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            color: selected ? primaryColor : Colors.transparent,
-                            border: Border.all(
-                              color:
-                                  selected
-                                      ? primaryColor
-                                      : const Color(0xFFD1D5DB),
-                              width: 2,
-                            ),
-                            shape: BoxShape.circle,
-                          ),
-                          child:
-                              selected
-                                  ? const Icon(
-                                    Icons.check,
-                                    size: 14,
-                                    color: Colors.white,
-                                  )
-                                  : null,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 24),
+
+        AppText(
+          text: title,
+          fontWeight: FontWeight.w600,
+          fontSize: 13,
+          lineHeight: 18 / 13,
+          letterSpacing: -0.24,
+          color: Color(0xFF101840),
+        ),
+
+        const SizedBox(height: 16),
+
+        Row(
+          children:
+              [yes, no].map((value) {
+                final isSelected = groupValue == value;
+                return GestureDetector(
+                  onTap: () => onChanged(value),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        isSelected
+                            ? 'assets/images/checkbox_checked.png'
+                            : 'assets/images/checkbox_unchecked.png',
+                        width: 24,
+                        height: 24,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        value,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          height: 20 / 13,
+                          letterSpacing: -0.24,
+                          color: Color(0xFF525871),
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          value,
-                          style: const TextStyle(
-                            color: secondaryTextColor,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(width: 24),
-                      ],
-                    ),
-                  );
-                }).toList(),
-          ),
-        ],
-      ),
+                      ),
+
+                      const SizedBox(width: 24),
+                    ],
+                  ),
+                );
+              }).toList(),
+        ),
+      ],
     );
   }
 
@@ -248,7 +234,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        border: Border.all(color: const Color(0xFFD0D5DD)),
+        border: Border.all(color: Color(0xFFD0D5DD)),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Center(
@@ -258,14 +244,20 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
           keyboardType: TextInputType.number,
           textAlign: TextAlign.center,
           style: const TextStyle(
-            color: headingTextColor,
+            fontSize: 15,
             fontWeight: FontWeight.w500,
-            fontSize: 16,
+            letterSpacing: -0.24,
+            color: Color(0xFF101840),
           ),
           decoration: InputDecoration(
             counterText: '',
             hintText: hint,
-            hintStyle: const TextStyle(color: Color(0xFFB0B8C1)),
+            hintStyle: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              letterSpacing: -0.24,
+              color: Color(0xFFDBDAE5),
+            ),
             border: InputBorder.none,
           ),
         ),
@@ -290,132 +282,173 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
   Widget _buildCheckboxChip(String task) {
     final isSelected = selectedTasks.contains(task);
-    return Row(
-      children: [
-        Theme(
-          data: Theme.of(context).copyWith(unselectedWidgetColor: primaryColor),
-          child: Transform.scale(
-            scale: 1.1,
-            child: Checkbox(
-              activeColor: primaryColor,
-              value: isSelected,
-              onChanged: (_) => toggleTask(task),
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => toggleTask(task),
+            child: Image.asset(
+              isSelected
+                  ? 'assets/images/checkbox_checked_square.png'
+                  : 'assets/images/checkbox_unchecked_Square.png',
+              width: 24,
+              height: 24,
             ),
           ),
-        ),
-        Expanded(
-          child: Text(
-            task,
-            style: const TextStyle(
-              color: secondaryTextColor,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              task,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF525871),
+                letterSpacing: -0.24,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("")),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Image.asset(
+            'assets/images/back_icon.png',
+            width: 24,
+            height: 24,
+          ),
+        ),
+      ),
+
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        width: double.infinity,
+        height: 48,
         child: ElevatedButton(
           onPressed: isFormValid ? submitData : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor:
-                isFormValid ? Theme.of(context).primaryColor : Colors.grey[300],
-            foregroundColor: isFormValid ? Colors.white : Colors.black38,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.resolveWith<Color>(
+              (states) =>
+                  states.contains(MaterialState.disabled)
+                      ? const Color(0xFFE4E4EC)
+                      : const Color(0xFF371382),
+            ),
+            foregroundColor: MaterialStateProperty.resolveWith<Color>(
+              (states) =>
+                  states.contains(MaterialState.disabled)
+                      ? const Color(0xFFA0A3BD)
+                      : Colors.white,
+            ),
+            padding: MaterialStateProperty.all<EdgeInsets>(
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            textStyle: MaterialStateProperty.all<TextStyle>(
+              const TextStyle(
+                fontFamily: 'SFProDisplay',
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                height: 20 / 15, // ~1.33
+                letterSpacing: -0.24,
+              ),
             ),
           ),
           child: const Text('Continue'),
         ),
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: RoundedProgressBar(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        child: ListView(
+          children: [
+            SizedBox(height: 16),
+            RoundedProgressBar(
               progress: progress,
-              height: 8,
-              backgroundColor: const Color(0xFFD8DAE5),
+              height: 6,
+              backgroundColor: const Color(0xFFDBDAE5),
               fillColor: const Color(0xFF3030D6),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              "Skills",
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-                color: headingTextColor,
+            SizedBox(height: 36),
+
+            AppText(
+              text: "Skills",
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+              lineHeight: 22 / 17,
+              letterSpacing: -0.24,
+              color: Color(0xFF101840),
+            ),
+            SizedBox(height: 4),
+
+            AppText(
+              text: "Tell us a bit more about yourself",
+              fontSize: 13,
+              fontWeight: FontWeight.w400,
+              lineHeight: 18 / 13,
+              letterSpacing: -0.24,
+              color: Color(0xFF525871),
+            ),
+
+            const SizedBox(height: 24),
+            AppText(
+              text:
+                  "How many of these tasks have you done before?\n(select all that apply)",
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              lineHeight: 18 / 13,
+              letterSpacing: -0.24,
+              color: Color(0xFF101840),
+            ),
+
+            const SizedBox(height: 16),
+            ..._buildTaskRows(taskOptions),
+            buildRadioGroup("Do you have your own smartphone?", hasSmartphone, (
+              v,
+            ) {
+              setState(() {
+                hasSmartphone = v;
+                if (v == yes) canGetPhone = null;
+              });
+            }),
+            if (hasSmartphone == 'No')
+              buildRadioGroup(
+                "Will you be able to get a phone for the job?",
+                canGetPhone,
+                (v) {
+                  setState(() => canGetPhone = v);
+                },
               ),
+            buildRadioGroup("Have you ever used google maps?", usedGoogleMaps, (
+              v,
+            ) {
+              setState(() => usedGoogleMaps = v);
+            }),
+            const SizedBox(height: 24),
+
+            AppText(
+              text: "Date of birth",
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              lineHeight: 18 / 13,
+              letterSpacing: -0.24,
+              color: Color(0xFF101840),
             ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            child: Text(
-              "Tell us a bit more about yourself",
-              style: TextStyle(fontSize: 13, color: secondaryTextColor),
-            ),
-          ),
-          const SizedBox(height: 24),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              "How many of these tasks have you done before? \n(select all that apply)",
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: headingTextColor,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          ..._buildTaskRows(taskOptions),
-          buildRadioGroup("Do you have your own smartphone?", hasSmartphone, (
-            v,
-          ) {
-            setState(() {
-              hasSmartphone = v;
-              if (v == yes) canGetPhone = null;
-            });
-          }),
-          if (hasSmartphone == 'No')
-            buildRadioGroup(
-              "Will you be able to get a phone for the job?",
-              canGetPhone,
-              (v) {
-                setState(() => canGetPhone = v);
-              },
-            ),
-          buildRadioGroup("Have you ever used google maps?", usedGoogleMaps, (
-            v,
-          ) {
-            setState(() => usedGoogleMaps = v);
-          }),
-          const SizedBox(height: 24),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              "Date of birth",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: headingTextColor,
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
+
+            const SizedBox(height: 8),
+            Row(
               children: [
                 _buildDateBox(_dayController, 'DD', 2),
                 const SizedBox(width: 12),
@@ -424,56 +457,10 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                 _buildDateBox(_yearController, 'YYYY', 4),
               ],
             ),
-          ),
-          const SizedBox(height: 30),
-        ],
-      ),
-    );
-  }
-}
-
-class RoundedProgressBar extends StatelessWidget {
-  final double progress;
-  final double height;
-  final Color backgroundColor;
-  final Color fillColor;
-
-  const RoundedProgressBar({
-    super.key,
-    required this.progress,
-    this.height = 8,
-    this.backgroundColor = const Color(0xFFDADCE0),
-    this.fillColor = const Color(0xFF3F51B5),
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
-        final filledWidth = width * progress.clamp(0.0, 1.0);
-        return Stack(
-          children: [
-            Container(
-              width: width,
-              height: height,
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(height / 2),
-              ),
-            ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: filledWidth,
-              height: height,
-              decoration: BoxDecoration(
-                color: fillColor,
-                borderRadius: BorderRadius.circular(height / 2),
-              ),
-            ),
+            const SizedBox(height: 30),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 }

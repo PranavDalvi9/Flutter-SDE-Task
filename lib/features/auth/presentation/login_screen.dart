@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:task_app/core/widgets/app_checkbox_row.dart';
+import 'package:task_app/core/widgets/app_text.dart';
+import 'package:task_app/core/widgets/app_text_field.dart';
 import '../../questionnaire/presentation/questionnaire_screen.dart';
 import '../services/auth_service.dart';
 import '../../../core/services/local_storage.dart';
@@ -70,102 +73,128 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 40),
-              Text(
-                'Login or Sign up to continue',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+              SizedBox(height: 74),
+              AppText(
+                text: 'Login or Sign up to continue',
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+                lineHeight: 22 / 17, // ~1.29
+                letterSpacing: -0.24,
+                color: Color(0xFF101840),
               ),
               SizedBox(height: 24),
-              TextField(
-                controller: _email,
-                decoration: InputDecoration(
-                  hintText: 'Enter your username',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              ),
+
+              AppTextField(hintText: 'Enter your username', controller: _email),
+
               SizedBox(height: 16),
-              TextField(
+
+              AppTextField(
+                hintText: 'Enter password',
                 controller: _password,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: 'Enter password',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                isPassword: true,
               ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Theme(
-                    data: Theme.of(
-                      context,
-                    ).copyWith(unselectedWidgetColor: Color(0xFF371382)),
-                    child: Transform.scale(
-                      scale: 1.2,
-                      child: Checkbox(
-                        shape: CircleBorder(),
-                        activeColor: Color(0xFF371382),
-                        value: _hasReferral,
-                        onChanged: (value) {
-                          setState(() {
-                            _hasReferral = value ?? false;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  Text(
-                    'I have a referral code (optional)',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                  ),
-                ],
+
+              SizedBox(height: 32),
+
+              AppCheckboxRow(
+                value: _hasReferral,
+                onChanged: (val) => setState(() => _hasReferral = val),
+                text: 'I have a referral code (optional)',
               ),
+
               Spacer(),
-              RichText(
-                text: TextSpan(
-                  text: 'By clicking, I accept the ',
-                  style: TextStyle(color: const Color(0xFF525871)),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: 'Terms of Use',
-                      style: TextStyle(decoration: TextDecoration.underline),
+
+              Center(
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: const TextSpan(
+                    text: 'By clicking, I accept the ',
+
+                    style: TextStyle(
+                      fontFamily: 'SFProDisplay',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      height: 18 / 13,
+                      letterSpacing: -0.24,
+                      color: Color(0xFF525871),
                     ),
-                    TextSpan(text: ' & '),
-                    TextSpan(
-                      text: 'Privacy Policy',
-                      style: TextStyle(decoration: TextDecoration.underline),
-                    ),
-                  ],
+                    children: [
+                      TextSpan(
+                        text: 'Terms of Use',
+                        style: TextStyle(
+                          fontFamily: 'SFProDisplay',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          height: 18 / 13,
+                          letterSpacing: -0.24,
+                          color: Color(0xFF525871),
+                          decoration: TextDecoration.underline,
+                          decorationThickness: 1,
+                          decorationStyle: TextDecorationStyle.solid,
+                        ),
+                      ),
+                      TextSpan(text: ' & '),
+                      TextSpan(
+                        text: 'Privacy Policy',
+                        style: TextStyle(
+                          fontFamily: 'SFProDisplay',
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          height: 18 / 13,
+                          letterSpacing: -0.24,
+                          color: Color(0xFF525871),
+                          decoration: TextDecoration.underline,
+                          decorationThickness: 1,
+                          decorationStyle: TextDecorationStyle.solid,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 12),
 
               SizedBox(
                 width: double.infinity,
+                height: 48,
                 child: ElevatedButton(
-                  onPressed:
-                      _isFormValid
-                          ? () {
-                            _login();
-                          }
-                          : null,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        _isFormValid ? Color(0xFF371382) : Colors.grey[300],
-                    foregroundColor:
-                        _isFormValid ? Colors.white : Colors.black38,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                  onPressed: _isFormValid ? _login : null,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                      (states) =>
+                          states.contains(MaterialState.disabled)
+                              ? const Color(0xFFE4E4EC)
+                              : const Color(0xFF371382),
+                    ),
+                    foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                      (states) =>
+                          states.contains(MaterialState.disabled)
+                              ? const Color(0xFFA0A3BD)
+                              : Colors.white,
+                    ),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    textStyle: MaterialStateProperty.all<TextStyle>(
+                      const TextStyle(
+                        fontFamily: 'SFProDisplay',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        height: 20 / 15, // ~1.33
+                        letterSpacing: -0.24,
+                      ),
                     ),
                   ),
-                  child: Text('Continue'),
+                  child: const Text('Continue'),
                 ),
               ),
             ],
