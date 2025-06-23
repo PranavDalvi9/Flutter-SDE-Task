@@ -7,6 +7,7 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:task_app/core/services/local_storage.dart';
 import 'package:task_app/core/widgets/app_text.dart';
 import 'package:task_app/features/auth/presentation/login_screen.dart';
+import 'package:task_app/features/break_timer/presentation/circular_timer.dart';
 
 class BreakScreen extends StatefulWidget {
   const BreakScreen({super.key});
@@ -448,33 +449,45 @@ class _Sample2State extends State<BreakScreen> {
 
                           const SizedBox(height: 24),
 
-                          CircularPercentIndicator(
-                            radius: 140,
-                            lineWidth: 20,
-                            percent: (1 -
-                                    remaining.inSeconds /
-                                        breakDuration.inSeconds)
-                                .clamp(0.0, 1.0),
-                            startAngle: 210,
-                            arcType: ArcType.FULL,
-                            arcBackgroundColor: Colors.white.withOpacity(0.15),
-                            progressColor: Colors.white,
-                            backgroundColor: Colors.transparent,
-                            circularStrokeCap: CircularStrokeCap.round,
-                            center: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  _formatDuration(remaining),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          // CircularPercentIndicator(
+                          //   radius: 140,
+                          //   lineWidth: 20,
+                          //   percent: (1 -
+                          //           remaining.inSeconds /
+                          //               breakDuration.inSeconds)
+                          //       .clamp(0.0, 1.0),
+                          //   startAngle: 210,
+                          //   arcType: ArcType.FULL,
+                          //   arcBackgroundColor: Colors.white.withOpacity(0.15),
+                          //   progressColor: Colors.white,
+                          //   backgroundColor: Colors.transparent,
+                          //   circularStrokeCap: CircularStrokeCap.round,
+                          //   center: Column(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       Text(
+                          //         _formatDuration(remaining),
+                          //         style: const TextStyle(
+                          //           color: Colors.white,
+                          //           fontSize: 32,
+                          //           fontWeight: FontWeight.w800,
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          // CircularTimer(
+                          //   total: breakDuration,
+                          //   remaining: remaining,
+                          //   // breakDuration: breakDuration,
+                          //   label: 'Break Time',
+                          // ),
+                          CircularTimer(
+                            remaining: remaining,
+                            total: breakDuration,
+                            label: "Break",
                           ),
+
                           const SizedBox(height: 38),
                           Container(
                             width: MediaQuery.of(context).size.width - 80,
