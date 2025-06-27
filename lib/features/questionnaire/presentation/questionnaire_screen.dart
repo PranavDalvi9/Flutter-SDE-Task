@@ -41,6 +41,8 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   String? canGetPhone;
   String? usedGoogleMaps;
 
+  bool isSubmitting = false;
+
   @override
   void initState() {
     super.initState();
@@ -108,34 +110,50 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   }
 
   Future<void> submitData() async {
+    if (isSubmitting) return;
+    setState(() => isSubmitting = true);
+
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
+    try {
+      final dateOfBirth = {
+        "day": _dayController.text.trim(),
+        "month": _monthController.text.trim(),
+        "year": _yearController.text.trim(),
+      };
 
-    final dateOfBirth = {
-      "day": _dayController.text.trim(),
-      "month": _monthController.text.trim(),
-      "year": _yearController.text.trim(),
-    };
+      final data = {
+        "selectedTasks": selectedTasks.toList(),
+        "hasSmartphone": hasSmartphone,
+        "canGetPhone": canGetPhone,
+        "usedGoogleMaps": usedGoogleMaps,
+        "dateOfBirth": dateOfBirth,
+        "timestamp": FieldValue.serverTimestamp(),
+      };
 
-    final data = {
-      "selectedTasks": selectedTasks.toList(),
-      "hasSmartphone": hasSmartphone,
-      "canGetPhone": canGetPhone,
-      "usedGoogleMaps": usedGoogleMaps,
-      "dateOfBirth": dateOfBirth,
-      "timestamp": FieldValue.serverTimestamp(),
-    };
+      await FirebaseFirestore.instance
+          .collection('questionnaires')
+          .doc(user.uid)
+          .set(data);
+      await LocalStorage.saveCurrentScreen('homescreen');
 
-    await FirebaseFirestore.instance
-        .collection('questionnaires')
-        .doc(user.uid)
-        .set(data);
-    await LocalStorage.saveCurrentScreen('homescreen');
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(builder: (_) => const BreakScreen()),
+      // );
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const BreakScreen()),
-    );
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const BreakScreen()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+    } finally {
+      setState(() => isSubmitting = false);
+    }
   }
 
   Future<void> _loadPreviousAnswers() async {
@@ -337,7 +355,38 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         width: double.infinity,
         height: 48,
         child: ElevatedButton(
-          onPressed: isFormValid ? submitData : null,
+          onPressed: isFormValid && !isSubmitting ? submitData : null,
+
+          // onPressed: isFormValid ? submitData : null,
+          // style: ButtonStyle(
+          //   backgroundColor: MaterialStateProperty.resolveWith<Color>(
+          //     (states) =>
+          //         states.contains(MaterialState.disabled)
+          //             ? const Color(0xFFE4E4EC)
+          //             : const Color(0xFF371382),
+          //   ),
+          //   foregroundColor: MaterialStateProperty.resolveWith<Color>(
+          //     (states) =>
+          //         states.contains(MaterialState.disabled)
+          //             ? const Color(0xFFA0A3BD)
+          //             : Colors.white,
+          //   ),
+          //   padding: MaterialStateProperty.all<EdgeInsets>(
+          //     const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          //   ),
+          //   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          //   ),
+          //   textStyle: MaterialStateProperty.all<TextStyle>(
+          //     const TextStyle(
+          //       fontFamily: 'SFProDisplay',
+          //       fontSize: 15,
+          //       fontWeight: FontWeight.w600,
+          //       height: 20 / 15, // ~1.33
+          //       letterSpacing: -0.24,
+          //     ),
+          //   ),
+          // ),
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.resolveWith<Color>(
               (states) =>
@@ -362,12 +411,24 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
                 fontFamily: 'SFProDisplay',
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                height: 20 / 15, // ~1.33
+                height: 1.33,
                 letterSpacing: -0.24,
               ),
             ),
           ),
-          child: const Text('Continue'),
+          child:
+              isSubmitting
+                  ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                  : const Text('Continue'),
+
+          // child: const Text('Continue'),
         ),
       ),
       body: Padding(

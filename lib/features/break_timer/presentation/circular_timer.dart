@@ -30,14 +30,23 @@ class CircularTimer extends StatelessWidget {
           child: CustomPaint(
             painter: _TimerPainter(percent),
             child: Center(
-              child: Text(
-                formattedTime,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
+              child: AppText(
+                text: formattedTime,
+                textAlign: TextAlign.center,
+                color: Colors.white,
+                fontSize: 32,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.24,
               ),
+
+              // Text(
+              //   formattedTime,
+              //   style: const TextStyle(
+              //     fontSize: 24,
+              //     fontWeight: FontWeight.w700,
+              //     color: Colors.white,
+              //   ),
+              // ),
             ),
           ),
         ),
@@ -51,7 +60,19 @@ class CircularTimer extends StatelessWidget {
             color: Colors.white,
             fontSize: 17,
             fontWeight: FontWeight.w600,
+            letterSpacing: -0.24,
+            lineHeight:
+                22 /
+                17, // Converts line-height in px to Flutter's `height` factor
           ),
+
+          //  AppText(
+          //   text: label,
+          //   textAlign: TextAlign.center,
+          //   color: Colors.white,
+          //   fontSize: 17,
+          //   fontWeight: FontWeight.w600,
+          // ),
         ),
       ],
     );
